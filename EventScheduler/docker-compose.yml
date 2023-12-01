@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  eventscheduler:
+    image: ${DOCKER_REGISTRY-}eventscheduler
+    build:
+      context: .
+      dockerfile: EventScheduler/Dockerfile
+    environment:
+        server: db
+        port: 5432
+        database: events
+        user: develop
+        password: test123
+  db:
+    image: postgres
+    container_name: postgresdb
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: test123
+        POSTGRES_USER: develop
+        POSTGRES_DB: events
+    volumes:
+        - ../Postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+        - 5432:5432
