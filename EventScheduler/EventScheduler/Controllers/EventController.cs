@@ -17,9 +17,9 @@ namespace EventScheduler.Controllers
         }
 
         [HttpGet(Name = "AllEvents")]
-        public async Task<IEnumerable<Event>> GetAllEvents()
+        public async Task<IEnumerable<Event>> GetAllEvents(SortEventsBy sort = SortEventsBy.None, bool isAscending = true)
         {
-            return await databaseService.GetEvents();
+            return await databaseService.GetEvents(sort, isAscending);
         }
 
         [HttpGet(Name = "EventByName")]
@@ -58,6 +58,7 @@ namespace EventScheduler.Controllers
             await databaseService.SubscribeToEvent(id, email);
         }
 
+        [HttpGet(Name = "EventsByLocation")]
         public async Task<IEnumerable<Event>> GetEventsByLocation(string location)
         {
             return await databaseService.GetEventsByLocation(location);

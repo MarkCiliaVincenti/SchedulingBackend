@@ -39,9 +39,38 @@ namespace EventScheduler.Services
             return await dbContext.Events.Where(x => x.Location == location).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Event>> GetEvents()
+        public async Task<IEnumerable<Event>> GetEvents(SortEventsBy sort = SortEventsBy.None, bool isAscending = false)
         {
-            return await dbContext.Events.ToListAsync();
+            switch (sort)
+            {
+                case SortEventsBy.Popularity:
+                    if (isAscending)
+                        return await dbContext.Events.OrderBy(e => e.Subscriptions.Count).ToListAsync();
+                    else
+                        return await dbContext.Events.OrderByDescending(e => e.Subscriptions.Count).ToListAsync();
+
+                case SortEventsBy.CreationTime:
+                    if (isAscending)
+                        return await dbContext.Events.OrderBy(e => e.CreationTime).ToListAsync();
+                    else
+                        return await dbContext.Events.OrderByDescending(e => e.CreationTime).ToListAsync();
+
+                case SortEventsBy.Date:
+                    if (isAscending)
+                        return await dbContext.Events.OrderBy(e => e.Date).ToListAsync();
+                    else
+                        return await dbContext.Events.OrderByDescending(e => e.Date).ToListAsync();
+
+                case SortEventsBy.None:
+                default:
+                    return await dbContext.Events.ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Event>> GetEvents(DateTime from, DateTime to, bool isNotified)
+        {
+            var events = await dbContext.Events.ToListAsync();
+            return await dbContext.Events.Where(e => e.Reminded == isNotified && e.ReminderTime > from &&  e.ReminderTime < to).ToListAsync();
         }
 
         public async Task<IEnumerable<Event>> GetEventsByLocation(string location)
