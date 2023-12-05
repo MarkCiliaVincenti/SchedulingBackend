@@ -22,6 +22,10 @@ builder.Services.AddSingleton<PostgresConfiguration>();
 builder.Services.AddDbContext<EventsContext>();
 builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 
+builder.Services.AddSingleton<EventNotifierService>();
+builder.Services.AddSingleton<INotificationSchedulerService, NotificationSchedulerService>();
+builder.Services.AddHostedService<NotificationTimerService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
