@@ -1,3 +1,4 @@
+using EventScheduler.Events;
 using EventScheduler.Interfaces;
 using EventScheduler.Models;
 using EventScheduler.Postgres;
@@ -6,16 +7,17 @@ using EventScheduler.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var config = new Configuration();
 builder.Configuration.GetSection("Configuration").Bind(config);
 builder.Services.AddSingleton(config);
+
+var databaseEvents = new DatabaseEvents();
+builder.Services.AddSingleton<IDatabaseEvents>(databaseEvents);
+builder.Services.AddSingleton<IDatabaseEventsDistributer>(databaseEvents);
 
 builder.Services.AddSingleton<EventBuilder>();
 builder.Services.AddSingleton<PostgresConfiguration>();
@@ -28,7 +30,6 @@ builder.Services.AddHostedService<NotificationTimerService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

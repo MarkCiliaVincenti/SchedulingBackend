@@ -7,7 +7,7 @@ namespace EventScheduler.Services
 {
     public class DatabaseService(EventsContext dbContext, EventBuilder eventBuilder) : IDatabaseService
     {
-        public async Task DeleteEvent(string name)
+        public async Task<Event> DeleteEvent(string name)
         {
             var @event = await GetEvent(name);
 
@@ -16,12 +16,18 @@ namespace EventScheduler.Services
                 dbContext.Events.Remove(@event);
                 await dbContext.SaveChangesAsync();
             }
+
+            return @event;
         }
 
-        public async Task DeleteEventById(int id)
+        public async Task<Event> DeleteEventById(int id)
         {
-            dbContext.Events.Remove(new Event { Id = id });
+            var @event = await GetEvent(id);
+
+            dbContext.Events.Remove(@event);
             await dbContext.SaveChangesAsync();
+
+            return @event;
         }
 
         public async Task<Event?> GetEvent(string name)
@@ -78,12 +84,14 @@ namespace EventScheduler.Services
             return await dbContext.Events.Where(e => e.Location == location).ToListAsync();
         }
 
-        public async Task ScheduleEvent(string name, string description, string location, DateTime dateTime)
+        public async Task<Event> ScheduleEvent(string name, string description, string location, DateTime dateTime)
         {
             var @event = eventBuilder.Build(name, description, location, dateTime);
 
             await dbContext.Events.AddAsync(@event);
             await dbContext.SaveChangesAsync();
+
+            return @event;
         }
 
         public async Task SubscribeToEvent(int id, string email)
@@ -103,7 +111,7 @@ namespace EventScheduler.Services
             }
         }
 
-        public async Task UpdateEvent(int id, string? name = null, string? description = null, string? location = null, DateTime? dateTime = null, bool? isReminded = null)
+        public async Task<Event> UpdateEvent(int id, string? name = null, string? description = null, string? location = null, DateTime? dateTime = null, bool? isReminded = null)
         {
             var @event = await GetEvent(id);
 
@@ -113,6 +121,8 @@ namespace EventScheduler.Services
 
                 await dbContext.SaveChangesAsync();
             }
+
+            return @event;
         }
     }
 }

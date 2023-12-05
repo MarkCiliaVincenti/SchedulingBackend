@@ -6,14 +6,16 @@ namespace EventScheduler.Controllers
 {
     [ApiController]
     [Route("api/[action]")]
-    public class EventController(IDatabaseService databaseService) : ControllerBase
+    public class EventController(IDatabaseService databaseService, IDatabaseEventsDistributer databaseEventsDistributer) : ControllerBase
     {
         private readonly IDatabaseService databaseService = databaseService;
 
         [HttpPost(Name = "ScheduleEvent")]
         public async Task ScheduleEvent(string name, string description, string location, DateTime dateTime)
         {
-            await databaseService.ScheduleEvent(name, description, location, dateTime.ToUniversalTime());
+            var @event = await databaseService.ScheduleEvent(name, description, location, dateTime.ToUniversalTime());
+
+            databaseEventsDistributer.DisbributeEventCreated(@event);
         }
 
         [HttpGet(Name = "AllEvents")]
@@ -37,19 +39,25 @@ namespace EventScheduler.Controllers
         [HttpPost(Name = "UpdateEvent")]
         public async Task UpdateEvent(int id, string? name = null, string? description = null, string? location = null, DateTime? dateTime = null)
         {
-            await databaseService.UpdateEvent(id, name, description, location, dateTime);
+            var @event = await databaseService.UpdateEvent(id, name, description, location, dateTime);
+
+            databaseEventsDistributer.DistributeEventUpdated(@event);
         }
 
         [HttpDelete(Name = "DeleteEventByName")]
         public async Task DeleteEventByName(string name)
         {
-            await databaseService.DeleteEvent(name);
+            var @event = await databaseService.DeleteEvent(name);
+
+            databaseEventsDistributer.DistributeEventDeleted(@event);
         }
 
         [HttpDelete(Name = "DeleteEventById")]
         public async Task DeleteEventById(int id)
         {
-            await databaseService.DeleteEventById(id);
+            var @event = await databaseService.DeleteEventById(id);
+
+            databaseEventsDistributer.DistributeEventDeleted(@event);
         }
 
         [HttpPost(Name = "Subscribe")]
