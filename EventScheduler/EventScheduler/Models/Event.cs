@@ -27,6 +27,9 @@ namespace EventScheduler.Models
         [Column("reminder_time")]
         public DateTime ReminderTime {  get; set; }
 
+        [Column("reminded")]
+        public bool Reminded { get; set; }
+
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     }
 }

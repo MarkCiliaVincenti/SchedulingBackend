@@ -2,6 +2,7 @@ using EventScheduler.Interfaces;
 using EventScheduler.Models;
 using EventScheduler.Postgres;
 using EventScheduler.Services;
+using EventScheduler.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<Configuration>();
+var config = new Configuration();
+builder.Configuration.GetSection("Configuration").Bind(config);
+builder.Services.AddSingleton(config);
+
 builder.Services.AddSingleton<EventBuilder>();
 builder.Services.AddSingleton<PostgresConfiguration>();
 builder.Services.AddDbContext<EventsContext>();

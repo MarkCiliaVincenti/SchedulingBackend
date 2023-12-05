@@ -1,5 +1,6 @@
 ﻿using EventScheduler.Interfaces;
 using EventScheduler.Models;
+using EventScheduler.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventScheduler.Services
@@ -82,13 +83,13 @@ namespace EventScheduler.Services
             }
         }
 
-        public async Task UpdateEvent(int id, string? name = null, string? description = null, string? location = null, DateTime? dateTime = null)
+        public async Task UpdateEvent(int id, string? name = null, string? description = null, string? location = null, DateTime? dateTime = null, bool? isReminded = null)
         {
             var @event = await GetEvent(id);
 
             if(@event != null)
             {
-                eventBuilder.UpdateEvent(@event, name, description, location, dateTime);
+                eventBuilder.UpdateEvent(@event, name, description, location, dateTime, isReminded);
 
                 await dbContext.SaveChangesAsync();
             }

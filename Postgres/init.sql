@@ -7,7 +7,8 @@ CREATE TABLE scheduled_events (
     location VARCHAR(100),
     date TIMESTAMP,
     creation_time TIMESTAMP,
-    reminder_time TIMESTAMP
+    reminder_time TIMESTAMP,
+    reminded BOOLEAN
 );
 
 CREATE TABLE event_subscription (
