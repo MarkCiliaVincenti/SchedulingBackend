@@ -5,17 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventScheduler.Services
 {
-    public class DatabaseService : IDatabaseService
+    public class DatabaseService(EventsContext dbContext, EventBuilder eventBuilder) : IDatabaseService
     {
-        private readonly EventsContext dbContext;
-        private readonly EventBuilder eventBuilder;
-
-        public DatabaseService(EventsContext dbContext, EventBuilder eventBuilder)
-        {
-            this.dbContext = dbContext;
-            this.eventBuilder = eventBuilder;
-        }
-
         public async Task DeleteEvent(string name)
         {
             var @event = await GetEvent(name);

@@ -1,23 +1,14 @@
 ﻿using EventScheduler.Interfaces;
 using EventScheduler.Models;
-using EventScheduler.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventScheduler.Controllers
 {
     [ApiController]
-    [Route("api/[controller][action]")]
-    public class EventController : ControllerBase
+    [Route("api/[action]")]
+    public class EventController(IDatabaseService databaseService) : ControllerBase
     {
-        private readonly IDatabaseService databaseService;
-        private readonly Configuration configuration;
-
-        public EventController(IDatabaseService databaseService, Configuration configuration)
-        {
-            this.databaseService = databaseService;
-            this.configuration = configuration;
-        }
+        private readonly IDatabaseService databaseService = databaseService;
 
         [HttpPost(Name = "ScheduleEvent")]
         public async Task ScheduleEvent(string name, string description, string location, DateTime dateTime)
