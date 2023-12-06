@@ -5,6 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventScheduler.Services
 {
+    /// <summary>
+    /// Only class to interact with the database directly.
+    /// </summary>
+    /// <param name="dbContext"></param>
+    /// <param name="eventBuilder"></param>
     public class DatabaseService(EventsContext dbContext, EventBuilder eventBuilder) : IDatabaseService
     {
         public async Task<Event> DeleteEvent(string name)

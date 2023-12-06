@@ -1,19 +1,12 @@
-﻿using EventScheduler.Postgres;
+﻿using EventScheduler.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventScheduler.Models
 {
-    public class EventsContext : DbContext
+    public class EventsContext(PostgresConfiguration configuration) : DbContext
     {
-        private readonly PostgresConfiguration configuration;
-
         public DbSet<Event> Events { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-
-        public EventsContext(PostgresConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

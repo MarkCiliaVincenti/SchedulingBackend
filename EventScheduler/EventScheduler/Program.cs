@@ -1,7 +1,7 @@
+using EventScheduler.Configuration;
 using EventScheduler.Events;
 using EventScheduler.Interfaces;
 using EventScheduler.Models;
-using EventScheduler.Postgres;
 using EventScheduler.Services;
 using EventScheduler.Utils;
 using Microsoft.AspNetCore.RateLimiting;
@@ -23,7 +23,7 @@ builder.Services.AddRateLimiter(_ => _.AddConcurrencyLimiter(policyName: "traffi
     options.QueueLimit = rateLimitingOptions.QueueLimit;
 }));
 
-var config = new Configuration();
+var config = new NotificationConfiguration();
 builder.Configuration.GetSection("Configuration").Bind(config);
 builder.Services.AddSingleton(config);
 

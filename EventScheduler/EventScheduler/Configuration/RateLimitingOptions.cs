@@ -1,4 +1,4 @@
-﻿namespace EventScheduler.Models
+﻿namespace EventScheduler.Configuration
 {
     public class RateLimitingOptions
     {

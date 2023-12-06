@@ -1,8 +1,9 @@
-﻿using EventScheduler.Models;
+﻿using EventScheduler.Configuration;
+using EventScheduler.Models;
 
 namespace EventScheduler.Utils
 {
-    public class EventBuilder(Configuration configuration)
+    public class EventBuilder(NotificationConfiguration configuration)
     {
         public Event Build(string name, string description, string location, DateTime dateTime)
         {
