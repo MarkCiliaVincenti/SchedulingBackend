@@ -20,7 +20,11 @@ namespace EventScheduler.Services
         private readonly Dictionary<int, CancellationTokenSource> notificationTasks = [];
 
         // Lock on id instead of lock object to allow better concurrency.
-        private readonly AsyncKeyedLocker<int> asyncKeyedLocker = new();
+        private readonly AsyncKeyedLocker<int> asyncKeyedLocker = new(o =>
+        {
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
 
 
         public NotificationSchedulerService(IServiceProvider serviceProvider,
